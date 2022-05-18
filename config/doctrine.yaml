@@ -1,0 +1,9 @@
+doctrine:
+  orm:
+    mappings:
+      WebapiBundle:
+        is_bundle: true
+        type: annotation
+        dir: "src/Entity"
+        prefix: 'ICS\WebapiBundle\Entity'
+        alias: Webapi
