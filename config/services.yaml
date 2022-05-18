@@ -5,9 +5,9 @@ services:
   #ICS\WebapiBundle\Controller\:
   #resource: "../src/Controller"
   #tags: ['controller.services_arguments']
-  #ICS\WebapiBundle\Service\:
-  #resource: "../src/Service"
-  #tags: ['controller.services_arguments']
+  ICS\WebapiBundle\Service\:
+    resource: "../src/Service"
+    tags: ["controller.services_arguments"]
   #ICS\WebapiBundle\Command\:
   #resource: "../src/Command"
   #tags: ['controller.services_arguments']
