@@ -16,7 +16,7 @@
     "repositories": [
         {
             "type": "path",
-            "url": "C:\\Users\\d.dutas\\Documents\\Developpements\\ImperiumClanSoftware\\WebApiBundle\\"
+            "url": "F:\\Symfony\\ImperiumClanSoftware\\Developements\\webapi-bundle\\"
         }
     ]
 

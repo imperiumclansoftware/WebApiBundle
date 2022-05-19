@@ -11,9 +11,13 @@
         public function getConfigTreeBuilder()
         {
             $treeBuilder = new TreeBuilder('webapi');
-            //$treeBuilder->getRootNode()->children()
+            $treeBuilder->getRootNode()->children()
+                ->arrayNode('pixabay')
+                    ->children()
+                        ->scalarNode('apiKey')->defaultValue('')->end()
+                    ->end()
             //    ->scalarNode('path')->defaultValue('medias')->end()
-            //;
+            ;
             return $treeBuilder;
         }
     }

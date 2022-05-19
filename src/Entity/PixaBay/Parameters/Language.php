@@ -2,6 +2,7 @@
 
 namespace ICS\WebapiBundle\Entity\PixaBay\Parameters;
 
+use ReflectionClass;
 use ICS\WebapiBundle\Entity\ApiParameter;
 
 class Language extends ApiParameter
@@ -34,8 +35,18 @@ class Language extends ApiParameter
     const LANGUAGE_ko = 'ko';
     const LANGUAGE_zh  = 'zh';
 
-    public static function getBaseParameter()
+    /**
+     * Get Image Type parameters list
+     */
+    public static function getParametersList(): array
     {
-        return "LANGUAGE";
+        $result = [];
+        $oClass = new ReflectionClass(Language::class);
+        foreach ($oClass->getConstants() as $key => $cst) {
+
+            $result[$cst] = ucfirst(strtolower(str_replace('LANGUAGE_', '', $key)));
+        }
+
+        return $result;
     }
 }

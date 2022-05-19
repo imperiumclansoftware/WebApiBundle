@@ -2,8 +2,8 @@
 
 namespace ICS\WebapiBundle\Entity\PixaBay\Parameters;
 
-use ICS\WebapiBundle\Entity\ApiParameter;
 use ReflectionClass;
+use ICS\WebapiBundle\Entity\ApiParameter;
 
 class ImageType extends ApiParameter
 {
@@ -20,7 +20,6 @@ class ImageType extends ApiParameter
     {
         $result = [];
         $oClass = new ReflectionClass(ImageType::class);
-        dump($oClass);
         foreach ($oClass->getConstants() as $key => $cst) {
 
             $result[$cst] = ucfirst(strtolower(str_replace('IMAGE_TYPE_', '', $key)));

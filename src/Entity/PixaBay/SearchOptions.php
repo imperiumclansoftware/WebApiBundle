@@ -2,74 +2,80 @@
 
 namespace ICS\WebapiBundle\Entity\PixaBay;
 
+use Symfony\Component\PropertyAccess\PropertyAccess;
+use ReflectionClass;
+use ICS\WebapiBundle\Entity\PixaBay\Parameters\Language;
+use ICS\WebapiBundle\Entity\PixaBay\Parameters\ImageType;
+use ICS\WebapiBundle\Entity\PixaBay\Parameters\ImageOrientation;
+
 class SearchOptions
 {
     /**
      * @var string
      */
-    private $key;
+    protected $key;
+    /**
+     * Search Query
+     *
+     * @var string
+     */
+    protected $q;
     /**
      * @var string
      */
-    private $lang;
+    protected $lang = Language::LANGUAGE_ENGLISH;
     /**
      * @var string
      */
-    private $image_type;
+    protected $image_type = ImageType::IMAGE_TYPE_ALL;
     /**
      * @var string
      */
-    private $orientation;
+    protected $orientation = ImageOrientation::IMAGE_ORIETATION_ALL;
     /**
      * @var string
      */
-    private $category;
+    protected $category;
     /**
      * @var string
      */
-    private $min_width;
+    protected $min_width = 0;
     /**
      * @var string
      */
-    private $min_height;
+    protected $min_height = 0;
     /**
      * @var string
      */
-    private $colors;
+    protected $colors;
     /**
      * @var string
      */
-    private $editors_choice;
+    protected $editors_choice = false;
     /**
      * @var bool
      */
-    private $safesearch;
+    protected $safesearch = false;
     /**
      * @var string
      */
-    private $order;
+    protected $order;
     /**
      * @var int
      */
-    private $page;
+    protected $page = 1;
     /**
      * @var int
      */
-    private $per_page;
+    protected $per_page = 12;
     /**
      * @var bool
      */
-    private $pretty;
+    protected $pretty = false;
 
-    function getKey()
+    public function __construct(string $apiKey)
     {
-        return $this->key;
-    }
-
-    function setKey($key)
-    {
-        $this->key = $key;
-        return $this;
+        $this->key = $apiKey;
     }
 
     function getLang()
@@ -213,5 +219,35 @@ class SearchOptions
     {
         $this->pretty = $pretty;
         return $this;
+    }
+
+    function __toString()
+    {
+        $finalUrlString = "";
+        $oClass = new ReflectionClass(__CLASS__);
+        $propertyAccessor = PropertyAccess::createPropertyAccessorBuilder()
+            ->disableExceptionOnInvalidPropertyPath()
+            ->getPropertyAccessor();
+        foreach ($oClass->getProperties() as $property) {
+            $finalUrlString .= $property->name . '=' . $propertyAccessor->getValue($this, $property->name) . '&';
+        }
+
+        return substr($finalUrlString, 0, strlen($finalUrlString) - 1);
+    }
+
+    function getQ()
+    {
+        return $this->q;
+    }
+
+    function setQ($q)
+    {
+        $this->q = $q;
+        return $this;
+    }
+
+    function getKey()
+    {
+        return $this->key;
     }
 }

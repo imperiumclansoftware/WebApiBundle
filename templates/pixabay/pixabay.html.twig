@@ -1,0 +1,243 @@
+{% extends "base.html.twig" %}
+{% block title %}
+    PixaBay homepage
+            
+        
+    
+{% endblock %}
+{% block body %}
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-12">
+                <h1>
+                    Welcome to PixaBay homepage
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                        
+                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                        
+                                                                                                                                                                                                    
+                                                                                                                                                                                
+                                                                                                                                                            
+                                                                                                                                        
+                                                                                                                    
+                                                                                                
+                                                                            
+                                                        
+                                    
+                </h1>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-12 col-md-6 offset-md-3">
+                <form id="searchForm" method="POST">
+                    <div class="input-group">
+                        <div class="input-group-prepend">
+                            <select name="type" id="" class="form-select">
+                                {% for itk,imageType in imageTypes %}
+                                    {% if selectedType == itk %}
+                                        {% set selected = 'selected' %}
+                                    {% else %}
+                                        {% set selected = '' %}
+                                    {% endif %}
+                                    <option value="{{ itk }}" {{ selected|default('') }}>
+                                        {{ imageType }}
+                                    </option>
+                                {% endfor %}
+                            </select>
+                        </div>
+                        <input type="text" name="search" class="form-control" value="{{ search }}" />
+                        <div class="input-group-append">
+                            <button type="submit" class="btn btn-primary">
+                                <i class="fa fa-search"></i>
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+        {% if search != '' %}
+            <div class="row">
+                <div class="col-12">
+                    <h2>
+                        Pictures   
+                                                                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                                                                    
+                                                                                                                                                                                                                                            
+                                                                                                                                                                                                                    
+                                                                                                                                                                                            
+                                                                                                                                                                    
+                                                                                                                                            
+                                                                                                                    
+                                                                                            
+                                                                    
+                                            
+                    </h2>
+                </div>
+            </div>
+            {% for images in resultsImages.images|batch(6,'none') %}
+                <div class="row my-3">
+                    {% for image in images %}
+                        {% if image=='none' %}
+                            <div class="col"></div>
+                        {% else %}
+                            <div class="col">
+                                <div class="card h-100">
+                                    <img src="{{ image.webformat.url }}" alt="" class="card-img-top" />
+                                    <div class="card-body">
+                                        <div class="row">
+                                            <div class="col-3">
+                                                <img src="{{ image.user.imageUrl }}" alt="User {{ image.user.name }}" class="rounded-circle img-fluid" />
+                                            </div>
+                                            <div class="col-9">
+                                                <a href="{{ image.user.pageUrl }}" target="_blank">
+                                                    {{ image.user.name }}
+                                                </a>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="card-body">
+                                        <i class="fa fa-tags"></i>
+                                        Tags :                             
+                                                                                                                        
+                                                                                
+                                        {% for tag in image.tags %}
+                                            <a href="https://pixabay.com/fr/images/search/{{ tag }}/" class="badge bg-primary text-light">
+                                                {{ tag }}
+                                            </a>
+                                        {% endfor %}
+                                    </div>
+                                    <div class="card-body text-center">
+                                        <div class="btn-group my-3">
+                                            <a class="btn btn-primary" href="{{ image.pageUrl }}" target="_blank">
+                                                <i class="fa fa-globe"></i>
+                                            </a>
+                                            <div class="dropdown">
+                                                <button class="btn btn-secondary dropdown-toggle" type="button" id="downloadMenuButton{{ image.id }}" data-bs-toggle="dropdown" aria-expanded="false">
+                                                    <i class="fa fa-download"></i>                  
+                                                </button>
+                                                <ul class="dropdown-menu" aria-labelledby="downloadMenuButton{{ image.id }}">
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ image.preview.url }}" target="_blank">
+                                                            Preview ({{ image.preview.size }})
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ image.webformat.url }}" target="_blank">
+                                                            Web Format ({{ image.webformat.size }})
+                                                        </a>
+                                                    </li>
+                                                    <li>
+                                                        <a class="dropdown-item" href="{{ image.largeImage.url }}" target="_blank">
+                                                            Large Image ({{ image.largeImage.size }})
+                                                        </a>
+                                                    </li>
+                                                </ul>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endif %}
+                    {% endfor %}
+                </div>
+            {% endfor %}
+            <div class="row">
+                <div class="col-12 col-md-6 offset-md-3">
+                    <ul class="pagination">
+                        {% if currentImagePage > 1 %}
+                            <li class="page-item">
+                                <span class="page-link" href="{{ path('ics-webapi-pixabay-homepage',{imagePage: (currentImagePage - 1)}) }}">
+                                    Previous              
+                                                                                                                    
+                                                                                                        
+                                                                    
+                                </span>
+                            </li>
+                        {% endif %}
+                        {% for page in currentImagePage..currentImagePage + 5 %}
+                            {% if currentImagePage==page %}
+                                {% set active = 'active' %}
+                            {% else %}
+                                {% set active = '' %}
+                            {% endif %}
+                            <li class="page-item {{ active }}">
+                                <span class="page-link" href="{{ path('ics-webapi-pixabay-homepage',{imagePage: page}) }}">
+                                    {{ page }}
+                                </span>
+                            </li>
+                        {% endfor %}
+                        {% if resultsImages.nbPages > 10 %}
+                            <li class="page-item">
+                                <span class="page-link disabled">
+                                    ...
+                                                                                                                                            
+                                                                                                        
+                                                                    
+                                </span>
+                            </li>
+                        {% endif %}
+                        {% for page in (resultsImages.nbPages - 5)..resultsImages.nbPages %}
+                            {% if currentImagePage==page %}
+                                {% set active = 'active' %}
+                            {% else %}
+                                {% set active = '' %}
+                            {% endif %}
+                            <li class="page-item {{ active }}">
+                                <span class="page-link" href="{{ path('ics-webapi-pixabay-homepage',{imagePage: page}) }}">
+                                    {{ page }}
+                                </span>
+                            </li>
+                        {% endfor %}
+                        {% if currentImagePage < resultsImages.nbPages %}
+                            <li class="page-item">
+                                <span class="page-link" href="{{ path('ics-webapi-pixabay-homepage',{imagePage: (currentImagePage + 1)}) }}">
+                                    Next                 
+                                                                                                                                
+                                                                                                        
+                                                                    
+                                </span>
+                            </li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+        {% endif %}
+    </div>
+{% endblock %}
+{% block stylesheets %}{% endblock %}
+{% block javascripts %}
+    <script>
+$(document).ready(function(){
+
+$('span.page-link').click(function(e){
+
+
+    $('#searchForm').attr('action',$(this).attr('href'));
+    $('#searchForm').submit();
+
+});
+
+
+});
+
+
+</script>
+{% endblock %}

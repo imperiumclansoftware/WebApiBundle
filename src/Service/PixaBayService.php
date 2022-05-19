@@ -2,70 +2,55 @@
 
 namespace ICS\WebapiBundle\Service;
 
-use ICS\WebapiBundle\Entity\PixaBay\Parameters\VideoPosterSize;
 use Symfony\Contracts\HttpClient\HttpClientInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBagInterface;
+use Symfony\Component\DependencyInjection\ParameterBag\ParameterBag;
+use ICS\WebapiBundle\Entity\PixaBay\SearchOptions;
+use ICS\WebapiBundle\Entity\PixaBay\Response\PixaBayResponse;
+use ICS\WebapiBundle\Entity\PixaBay\Response\PixaBayImageSearchResponse;
+use ICS\WebapiBundle\Entity\PixaBay\Parameters\VideoPosterSize;
 
 class PixaBayService
 {
 
     private $httpClient;
     private $apiUrl = "https://pixabay.com/api/";
-    private $apiKey = "27440602-3e39ef975e6e60cb304a6b113";
+    private $config;
+    private $searchOptions;
 
-
-
-    public function __construct(HttpClientInterface  $httpClient)
+    public function __construct(HttpClientInterface  $httpClient,ParameterBagInterface $parameterBag)
     {
         $this->httpClient = $httpClient;
+        $this->config = $parameterBag->get('webapi');
+        $this->searchOptions = new SearchOptions($this->config['pixabay']['apiKey']);
     }
 
-    public function searchImages(string $search, string $type = 'photo', int $nbResult = 10)
+    public function searchImages(string $search)
     {
-        $options = [];
-        $options['key'] = $this->apiKey;
-        $options['q'] = $search;
-        $options['image_type'] = $type;
-        $options['lang'] = 'fr';
-        $options['category'] = 'people';
-        $options['per_page'] = $nbResult;
-
-        $finalUrl = $this->apiUrl . '?';
-
-        foreach ($options as $key => $option) {
-            $finalUrl .= $key . '=' . $option . '&';
-        }
-
-        $finalUrl = substr($finalUrl, 0, strlen($finalUrl) - 1);
-
+        $this->searchOptions->setQ($search);
+        $finalUrl = $this->apiUrl . '?'.$this->searchOptions;
         $response = $this->httpClient->request('GET', $finalUrl);
-
-        return json_decode($response->getContent());
+        $finalResponse = new PixaBayImageSearchResponse($response->getContent(),$response->getHeaders(),$this->searchOptions);
+        dump($finalResponse);
+        return $finalResponse;
     }
 
     public function searchVideos(string $search)
     {
-        $options = [];
-        $options['key'] = $this->apiKey;
-        $options['q'] = $search;
-        // $options['lang'] = 'fr';
-        // $options['category'] = 'people';
-        // $options['per_page'] = $nbResult;
-
-        $finalUrl = $this->apiUrl . 'videos/' . '?';
-
-        foreach ($options as $key => $option) {
-            $finalUrl .= $key . '=' . $option . '&';
-        }
-
-        $finalUrl = substr($finalUrl, 0, strlen($finalUrl) - 1);
+        $finalUrl = $this->apiUrl . 'videos/' . '?'.$this->searchOptions;
 
         $response = $this->httpClient->request('GET', $finalUrl);
 
         return json_decode($response->getContent());
     }
 
-    public function getVideoPoster(string $id, $size = VideoPosterSize::VIDEO_PICTURE_SIZE_640x360)
+    public function getVideoPoster(string $id, $size = VideoPosterSize::VIDEO_POSTER_SIZE_640x360)
     {
         return "https://i.vimeocdn.com/video/" . $id . "_" . $size . ".jpg ";
+
     }
+
+	function getSearchOptions(): SearchOptions {
+		return $this->searchOptions;
+	}
 }
