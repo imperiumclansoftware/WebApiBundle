@@ -18,7 +18,7 @@ class PixaBayService
     private $config;
     private $searchOptions;
 
-    public function __construct(HttpClientInterface  $httpClient,ParameterBagInterface $parameterBag)
+    public function __construct(HttpClientInterface  $httpClient, ParameterBagInterface $parameterBag)
     {
         $this->httpClient = $httpClient;
         $this->config = $parameterBag->get('webapi');
@@ -28,16 +28,17 @@ class PixaBayService
     public function searchImages(string $search)
     {
         $this->searchOptions->setQ($search);
-        $finalUrl = $this->apiUrl . '?'.$this->searchOptions;
+        $finalUrl = $this->apiUrl . '?' . $this->searchOptions->__toString();
+        dump($finalUrl);
         $response = $this->httpClient->request('GET', $finalUrl);
-        $finalResponse = new PixaBayImageSearchResponse($response->getContent(),$response->getHeaders(),$this->searchOptions);
+        $finalResponse = new PixaBayImageSearchResponse($response->getContent(), $response->getHeaders(), $this->searchOptions);
         dump($finalResponse);
         return $finalResponse;
     }
 
     public function searchVideos(string $search)
     {
-        $finalUrl = $this->apiUrl . 'videos/' . '?'.$this->searchOptions;
+        $finalUrl = $this->apiUrl . 'videos/' . '?' . $this->searchOptions;
 
         $response = $this->httpClient->request('GET', $finalUrl);
 
@@ -47,10 +48,10 @@ class PixaBayService
     public function getVideoPoster(string $id, $size = VideoPosterSize::VIDEO_POSTER_SIZE_640x360)
     {
         return "https://i.vimeocdn.com/video/" . $id . "_" . $size . ".jpg ";
-
     }
 
-	function getSearchOptions(): SearchOptions {
-		return $this->searchOptions;
-	}
+    function getSearchOptions(): SearchOptions
+    {
+        return $this->searchOptions;
+    }
 }
